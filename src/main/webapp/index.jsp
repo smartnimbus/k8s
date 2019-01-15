@@ -9,7 +9,7 @@
 		<%= new java.util.Date() %></p>
 	<p>
 		Server IP
-		<%= request.getLocalAddr(); %></p>
+		<%= request.getLocalAddr() %></p>
 	<p>
 		You are coming from 
 		<%= request.getRemoteAddr()  %></p>
