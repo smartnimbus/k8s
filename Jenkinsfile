@@ -25,11 +25,14 @@ pipeline {
             }
         }      
         stage('Run image') {
-            /* Ideally, we would run a test framework against our image.
-            * For this example, we're using a Volkswagen-type approach ;-) */
+            agent any 
+                steps {
+                /* Ideally, we would run a test framework against our image.
+                * For this example, we're using a Volkswagen-type approach ;-) */
 
-            customImage.withRun('--name was8:${env.BUILD_ID} -p 9043:9043 -p 9443:9443 -d' ) {
-            sh 'cat /tmp/PASSWORD'
+                customImage.withRun('--name was8:${env.BUILD_ID} -p 9043:9043 -p 9443:9443 -d' ) {
+                sh 'cat /tmp/PASSWORD'
+                }
             }
         }
     }
