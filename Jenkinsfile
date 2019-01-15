@@ -1,47 +1,7 @@
-/*
-pipeline {
-    agent {
-        docker {
-            image 'maven:3-alpine'
-            args '-v /root/.m2:/root/.m2'
-        }
-    }
-    stages {
-        stage('Build') {
-            steps {
-                sh 'mvn -B -DskipTests clean package'
-                
-            }
-        }
-    }
-
-    agent {
-        // Equivalent to "docker build -f Dockerfile.build --build-arg version=1.0.2 ./build/
-        dockerfile {
-            filename 'Dockerfile'
-            dir 'build'
-            //label 'my-defined-label'
-            additionalBuildArgs  '-t my-image:${env.BUILD_ID}'
-            //args '-v /tmp:/tmp'
-        }
-    }
-
-  / agent { 
-        node('docker') { 
-            stage('Test') {
-                steps {
-                    def customImage = docker.build("my-image:${env.BUILD_ID}")
-                }
-            }
-        }
-    }
-}
-*/
-
 pipeline {
     agent none
     stages {
-        stage('Back-end') {
+        stage('Package Application') {
             agent {
                 docker {
                     image 'maven:3-alpine'
@@ -49,52 +9,29 @@ pipeline {
                 }
             }
             steps {
+                echo 'Hello Amit'
+                sh 'mvn --version'
                 sh 'mvn -B -DskipTests clean package'
             }
         }
-        stage('Front-end') {
-            agent any /*{
-                dockerfile {
-                    filename 'Dockerfile'
-                    //dir 'build'
-                    label 'my-defined-label:${env.BUILD_ID}'
-                    //additionalBuildArgs  '-t my-image:${env.BUILD_ID}'
-                    //args '-v /tmp:/tmp'
-                }
-            }*/
+        stage('Build Was Image') {
+            agent any 
             steps {
                 echo 'Hello World'
 
                 script {
-                        def customImage = docker.build("my-image:${env.BUILD_ID}")
+                        def customImage = docker.build("was8:${env.BUILD_ID}")
                 }
+            }
+        }      
+        stage('Run image') {
+            /* Ideally, we would run a test framework against our image.
+            * For this example, we're using a Volkswagen-type approach ;-) */
+
+            customImage.withRun('--name was8:${env.BUILD_ID} -p 9043:9043 -p 9443:9443 -d' ) {
+            sh 'cat /tmp/PASSWORD'
             }
         }
     }
 }
 
-/*
-pipeline {
-    agent none
-    stage ('Checkout') {
-        agent any
-        steps {
-            git(
-                url: 'https://www.github.com/...',
-                credentialsId: 'CREDENTIALS',
-                branch: "develop"
-            )
-        }
-    }
-    stage ('Build') {
-        agent {
-            dockerfile {
-            filename 'Dockerfile.ci'
-        }
-        steps {
-            [...]
-        }
-}
-    }
-    [...]
-}*/
