@@ -64,6 +64,7 @@ pipeline {
             }
             steps {
                 //sh 'node --version'
+                echo 'Hello World'
             }
         }
     }
