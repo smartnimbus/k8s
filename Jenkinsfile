@@ -31,7 +31,7 @@ pipeline {
                     /* Ideally, we would run a test framework against our image.
                     * For this example, we're using a Volkswagen-type approach ;-) */
 
-                    docker.image("was8:${env.BUILD_ID}").withRun("--name was8:${env.BUILD_ID} -p 9043:9043 -p 9443:9443 -d" ) {
+                    docker.image("was8:${env.BUILD_ID}").withRun("--name was8-${env.BUILD_ID} -p 9043:9043 -p 9443:9443 -d" ) {
                         sh 'cat /tmp/PASSWORD'
                     }
                 }
