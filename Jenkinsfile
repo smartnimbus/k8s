@@ -53,7 +53,7 @@ pipeline {
             }
         }
         stage('Front-end') {
-            agent {
+            agent any /*{
                 dockerfile {
                     filename 'Dockerfile'
                     //dir 'build'
@@ -61,10 +61,10 @@ pipeline {
                     //additionalBuildArgs  '-t my-image:${env.BUILD_ID}'
                     //args '-v /tmp:/tmp'
                 }
-            }
+            }*/
             steps {
-                //sh 'node --version'
                 echo 'Hello World'
+                def customImage = docker.build("my-image:${env.BUILD_ID}")
             }
         }
     }
