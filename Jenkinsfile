@@ -57,8 +57,8 @@ pipeline {
                 dockerfile {
                     filename 'Dockerfile'
                     //dir 'build'
-                    //label 'my-defined-label'
-                    additionalBuildArgs  '-t my-image:${env.BUILD_ID}'
+                    label 'my-defined-label:${env.BUILD_ID}'
+                    //additionalBuildArgs  '-t my-image:${env.BUILD_ID}'
                     //args '-v /tmp:/tmp'
                 }
             }
