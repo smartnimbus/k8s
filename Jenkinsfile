@@ -1,3 +1,4 @@
+/*
 pipeline {
     agent {
         docker {
@@ -25,7 +26,7 @@ pipeline {
         }
     }
 
-  /*  agent { 
+  / agent { 
         node('docker') { 
             stage('Test') {
                 steps {
@@ -33,5 +34,63 @@ pipeline {
                 }
             }
         }
-    }*/
+    }
 }
+*/
+
+pipeline {
+    agent none
+    stages {
+        stage('Back-end') {
+            agent {
+                docker {
+                    image 'maven:3-alpine'
+                    args '-v /root/.m2:/root/.m2'
+                }
+            }
+            steps {
+                sh 'mvn -B -DskipTests clean package'
+            }
+        }
+        stage('Front-end') {
+            agent {
+                dockerfile {
+                    filename 'Dockerfile'
+                    dir 'build'
+                    //label 'my-defined-label'
+                    additionalBuildArgs  '-t my-image:${env.BUILD_ID}'
+                    //args '-v /tmp:/tmp'
+                }
+            }
+            steps {
+                //sh 'node --version'
+            }
+        }
+    }
+}
+
+/*
+pipeline {
+    agent none
+    stage ('Checkout') {
+        agent any
+        steps {
+            git(
+                url: 'https://www.github.com/...',
+                credentialsId: 'CREDENTIALS',
+                branch: "develop"
+            )
+        }
+    }
+    stage ('Build') {
+        agent {
+            dockerfile {
+            filename 'Dockerfile.ci'
+        }
+        steps {
+            [...]
+        }
+}
+    }
+    [...]
+}*/
