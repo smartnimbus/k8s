@@ -1,4 +1,5 @@
 pipeline {
+    def customImage
     agent none
     stages {
         stage('Package Application') {
@@ -20,7 +21,7 @@ pipeline {
                 echo 'Hello World'
 
                 script {
-                        def customImage = docker.build("was8:${env.BUILD_ID}")
+                    customImage = docker.build("was8:${env.BUILD_ID}")
                 }
             }
         }      
