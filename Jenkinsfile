@@ -9,7 +9,16 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'mvn -B -DskipTests clean package'
-                def customImage = docker.build("was:${env.BUILD_ID}")
+                
+            }
+        }
+    }
+    agent { 
+        node('docker') { 
+            stage('Test') {
+                steps {
+                    def customImage = docker.build("my-image:${env.BUILD_ID}")
+                }
             }
         }
     }
