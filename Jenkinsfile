@@ -1,5 +1,4 @@
 pipeline {
-    def customImage
     agent none
     stages {
         stage('Package Application') {
@@ -21,7 +20,7 @@ pipeline {
                 echo 'Hello World'
 
                 script {
-                    customImage = docker.build("was8:${env.BUILD_ID}")
+                    def customImage = docker.build("was8:${env.BUILD_ID}")
                 }
             }
         }      
@@ -31,7 +30,7 @@ pipeline {
                 /* Ideally, we would run a test framework against our image.
                 * For this example, we're using a Volkswagen-type approach ;-) */
 
-                customImage.withRun('--name was8:${env.BUILD_ID} -p 9043:9043 -p 9443:9443 -d' ) {
+                docker.image('was8:${env.BUILD_ID}').withRun('--name was8:${env.BUILD_ID} -p 9043:9043 -p 9443:9443 -d' ) {
                 sh 'cat /tmp/PASSWORD'
                 }
             }
